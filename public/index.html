@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="css/style.css">
+	<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+	<title>Voicetamp! - みんなの「！」をつなげるアプリ</title>
+</head>
+<body>
+<header>
+	<h1>Voicetamp!</h1>
+</header>
+<article>
+	<div id="voiceBtn">
+		<a href="#" name="computer_error">スタンプ1</a>
+		<a href="#" name="light_bulb_breaking">スタンプ2</a>
+		<a href="#" name="door_bell">スタンプ3</a>
+	</div>
+</article>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/ion.sound.min.js"></script>
+<script src="js/gShake.js"></script>
+<script>
+
+$(window).on('load',function() {
+	$.ionSound({
+		sounds: [
+			"computer_error",
+			"light_bulb_breaking",
+			"door_bell",
+			"glass"
+		],
+		path: "sounds/"
+	});
+
+	$('#voiceBtn a').on('click', function(){
+		var sound = $(this).attr('name');
+		socket.emit('voice', sound);
+	});
+
+	$(this).gShake(function() {
+		var sound = 'glass';
+		socket.emit('voice', sound);
+	});
+
+});
+
+var log = '';
+var id = "";
+var socket = io.connect();
+
+socket.on('voice', function(sound){
+	$.ionSound.play(sound);
+	console.log(sound);
+});
+
+
+
+
+</script>
+</body>
+</html>
