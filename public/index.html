@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="css/style.css">
+	<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+	<title>Voicetamp! - みんなの「！」をつなげるアプリ</title>
+</head>
+<body>
+<header>
+	<h1>Voicetamp!</h1>
+</header>
+<article>
+	<div id="voiceBtn">
+		<a href="#" name="sound_cheer">スタンプ1</a>
+		<a href="#" name="sound_borling">スタンプ2</a>
+		<a href="#" name="sound_clap">スタンプ3</a>
+	</div>
+</article>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/ion.sound.min.js"></script>
+<script src="js/gShake.js"></script>
+<script>
+
+$(window).on('load',function() {
+
+	// 音声バリエーション
+	$.ionSound({
+		sounds: [
+			"sound_cheer",
+			"sound_borling",
+			"sound_clap",
+			"glass"
+		],
+		path: "sounds/"
+	});
+
+	// タップで音声スタンプ送信
+	$('#voiceBtn a').on('click', function(){
+		var sound = $(this).attr('name');
+		socket.emit('stamp', sound);
+	});
+
+	// シェイクで音声スタンプ送信
+	$(this).gShake(function() {
+		var sound = 'glass';
+		socket.emit('stamp', sound);
+	});
+
+});
+
+// stampイベントで音を鳴らす
+var socket = io.connect();
+socket.on('stamp', function(sound){
+	$.ionSound.play(sound);
+});
+
+</script>
+</body>
+</html>
